@@ -1,8 +1,6 @@
 package cci.ch.recursion8dynamicProgramming;
 
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TripleStep
 {
@@ -17,45 +15,89 @@ public class TripleStep
 
     public int solution(int n)
     {
-        throwIfNLessThanZero(n);
-
-        List<Integer> hops = new LinkedList<>(Arrays.asList(1, 3, 6)); // base cases for n == 1,  n == 2,or n == 3 respectably
-
-        if (n < 4) // n is base cse
+        if (n < 0)
         {
-            return baseCase(n, hops);
+            throw new IllegalArgumentException("The Number Of Steps must be larger than zero");
         }
 
-        final int FIRST_INDEX = 0;
-        final int LAST_INDEX = 2;
-
-        for (int i = 3; i < n; i++)
-        {
-            int sum = hops.stream().reduce(0, (a, b) -> a + b);
-            hops.remove(0);
-            hops.add(sum);
-        }
-        return hops.get(2);
+        int[] mem = create8InitMem(n + 1);
+        //int s1 = solution1(n, mem);// O(N) time & O(N) Memory
+        int s2 = solution2(n); // O(N) time & O(1) Memory
+        return s2;
     }
 
-    private int baseCase(int n, List<Integer> hops)
+    private int solution2(int n)
     {
-        if(n == 0)
+        if (n == 0)
+        {
             return 0;
-        return hops.get(n - 1);
+        }
+
+        LinkedList<Integer> mem = create8InitMemQueue();
+
+        if (n <= 3)
+        {
+            return mem.get(n - 1);
+        }
+
+        for (int i = 4; i < n; i++)
+        {
+            int sum = getSum(mem);
+            appendToEndAndRemoveFirst(sum, mem);
+        }
+
+        return getSum(mem);
     }
 
-    private void throwIfNLessThanZero(int n)
+    private void appendToEndAndRemoveFirst(int sum, LinkedList<Integer> mem)
+    {
+        mem.addLast(sum);
+        mem.removeFirst();
+    }
+
+    private int getSum(LinkedList<Integer> mem)
+    {
+        return mem.stream()
+                  .reduce(0, (num1, num2) -> num1 + num2);
+    }
+
+    private LinkedList<Integer> create8InitMemQueue()
+    {
+        LinkedList<Integer> mem = new LinkedList<>();
+        mem.add(1);
+        mem.add(2);
+        mem.add(4);
+        return mem;
+    }
+
+    private int[] create8InitMem(int size)
+    {
+        int[] mem = new int[size];
+        mem[0] = 1;
+        return mem;
+    }
+
+    public int solution1(int n, int[] mem)
     {
         if (n < 0)
         {
-            throw new IllegalArgumentException("number of steps has to be larger than 0");
+            return 0;
         }
+        if (mem[n] != 0)
+        {
+            return mem[n];
+        }
+
+        int oneStep = solution1(n - 1, mem);
+        int twoSteps = solution1(n - 2, mem);
+        int threeSteps = solution1(n - 3, mem);
+
+        return oneStep + twoSteps + threeSteps;
     }
 
     public static void main(String[] args)
     {
-        int res = new TripleStep().solution(6);
+        int res = new TripleStep().solution(5);
         System.out.println(res);
     }
 }
