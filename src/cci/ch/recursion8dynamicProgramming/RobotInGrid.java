@@ -1,5 +1,8 @@
 package cci.ch.recursion8dynamicProgramming;
 
+import java.awt.*;
+import java.util.Arrays;
+
 public class RobotInGrid
 {
     /*
@@ -11,15 +14,13 @@ public class RobotInGrid
         Hints: #331, #360, #388
     */
 
-    int OFF_LIMIT = 1;
+    final int END = 2;
 
-    int END = 2;
+    final int PATH = 3;
 
-    int PATH = 3;
+    final int NOT_PATH = 4;
 
-    int NOT_PATH = 4;
-
-    public int[][] sol(int matrix[][])
+    public int[][] sol1(int matrix[][]) // O(N*M) time O(N + M)
     {
         if (matrix == null || matrix[0] == null)
         {
@@ -77,6 +78,7 @@ public class RobotInGrid
         {
             return true;
         }
+
         return false;
     }
 
@@ -90,15 +92,17 @@ public class RobotInGrid
                 { 0, 0, 1, 2 }
         };
 
-        new RobotInGrid().sol(matrix);
+        new RobotInGrid().sol1(matrix); //O(N*M) time O(N + M)
+        printMatrix(matrix);
+
+    }
+
+    private static void printMatrix(int[][] matrix)
+    {
         for (int i = 0; i < matrix.length; i++)
         {
-
-            for (int j = 0; j < matrix[i].length; j++)
-            {
-                System.out.print(matrix[i][j] + "\t");
-            }
-            System.out.println("\n");
+            String row = Arrays.toString(matrix[i]);
+            System.out.println(row);
         }
     }
 }
