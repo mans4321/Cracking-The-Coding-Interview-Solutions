@@ -1,7 +1,5 @@
 package cci.ch.recursion8dynamicProgramming;
 
-import java.util.Objects;
-
 public class MagicIndex
 {
 /*
@@ -13,43 +11,61 @@ public class MagicIndex
     Hints: # 170, #204, #240, #286, #340
 */
 
-    public int part1(int arr[], int start, int end)
+    public int part1(int arr[])
     {
-        Objects.nonNull(arr);
-        if (start > end)
+        int start = 0;
+        int end = arr.length - 1;
+        while (start < end)
+        {
+            int mid = (start + end) / 2;
+            if (mid > arr[mid])
+            {
+                start = mid + 1;
+            }
+            else if (mid < arr[mid])
+            {
+                end = mid - 1;
+            }
+            else
+            {
+                return mid;
+            }
+        }
+
+        return -1;
+    }
+
+    //https://stackoverflow.com/questions/13197552/using-binary-search-with-sorted-array-with-duplicates
+    public int part2(int arr[], int start, int end)
+    {
+        if (start < end)
         {
             return -1;
         }
 
-        int middle = (int) Math.ceil((start + end) / 2.0);
+        int mid = (start + end) / 2;
+        if (mid == arr[mid])
+        {
+            return mid;
+        }
 
-        if (arr[middle] == middle)
-        {
-            return middle;
-        }
-        else if (arr[middle] < middle)
-        {
-            return part1(arr, middle + 1, end);
-        }
-        return part1(arr, start, middle - 1);
-    }
+        int max = Math.max(mid + 1, arr[mid]);
+        int left = part2(arr, max, end);
 
-    //https://stackoverflow.com/questions/13197552/using-binary-search-with-sorted-array-with-duplicates
-    public int part2(int arr[])
-    {
-        Objects.requireNonNull(arr);
-        for (int i = 0; i < arr.length; i++)
+        if (left != -1)
         {
-            if(arr[i] == i)
-                return i;
+            return left;
         }
-        return -1;
+
+        int min = Math.min(mid - 1, arr[mid]);
+        int right = part2(arr, start, mid);
+        return right;
     }
 
     public static void main(String[] args)
     {
         int arr[] = { -1, -2, 1, 3, 4, 5, 7 };
-        int index = new MagicIndex().part1(arr, 0, arr.length - 1);
+        int index = new MagicIndex().part1(arr);
         System.out.println(index);
     }
 }
