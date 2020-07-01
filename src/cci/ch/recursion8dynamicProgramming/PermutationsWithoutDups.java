@@ -2,34 +2,53 @@ package cci.ch.recursion8dynamicProgramming;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class PermutationsWithoutDups
 {
     /*
         Permutations without Dups:
-            Write a method to compute all permutations of a string of unique characters.
+        Write a method to compute all permutations of a string of unique characters.
 
         Hints: #150, #185, #200, #267, #278, #309, #335, #356
     */
 
-    public List<String> solution(String str, int index)
+    public static void main(String[] args)
+    {
+
+        String str = "acb";
+
+        List<String> permutationsWithoutDups = permutationsWithoutDups(str, str.length() - 1);
+        sortedPrint(permutationsWithoutDups);
+    }
+
+    private static void sortedPrint(List<String> list)
+    {
+        list.sort(String::compareTo);
+        list.forEach(System.out::println);
+    }
+
+    public static List<String> permutationsWithoutDups(String str, int index)
     {
         if (index < 0)
         {
             return new ArrayList<>();
         }
-        List<String> permutations = solution(str, index - 1);
+        List<String> permutations = permutationsWithoutDups(str, index - 1);
         char me = str.charAt(index);
         return addMeToAllPermutations(me, permutations);
     }
 
-    private List<String> addMeToAllPermutations(char me, List<String> permutations)
+
+    private static List<String> addMeToAllPermutations(char me, List<String> permutations)
     {
         List<String> addMe = new ArrayList();
 
         if (permutations.isEmpty())
         {
-             addMeAtPosition(me, 0, "", addMe);
+            addMeAtPosition(me, 0, "", addMe);
         }
 
         for (String str : permutations)
@@ -39,7 +58,10 @@ public class PermutationsWithoutDups
         return addMe;
     }
 
-    private void addMeToAllPositions(char me, String str, List<String> addMe)
+    private static void addMeToAllPositions(
+            char me,
+            String str,
+            List<String> addMe)
     {
         for (int i = 0; i <= str.length(); i++)
         {
@@ -47,18 +69,25 @@ public class PermutationsWithoutDups
         }
     }
 
-    private void addMeAtPosition(char me, int pos, String str, List<String> addMe)
+    private static void addMeAtPosition(char me, int pos, String str, List<String> addMe)
     {
+        if (isMeAtPrevPosition(me, pos, str))
+        {
+            return;
+        }
+
         String before = str.substring(0, pos);
-        String after =  str.substring(pos);
+        String after = str.substring(pos);
         String newStr = before + me + after;
         addMe.add(newStr);
     }
 
-    public static void main(String[] args)
+    private static boolean isMeAtPrevPosition(char me, int pos, String str)
     {
-        String str = "ab";
-        List<String> list = new PermutationsWithoutDups().solution(str, str.length() - 1);
-        list.forEach(System.out::println);
+        if (pos == 0)
+        {
+            return false;
+        }
+        return str.charAt(pos - 1) == me;
     }
 }
