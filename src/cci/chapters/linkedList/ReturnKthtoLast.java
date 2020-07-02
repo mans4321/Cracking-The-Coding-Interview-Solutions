@@ -1,4 +1,4 @@
-package cci.chapters.linked_list;
+package cci.chapters.linkedList;
 
 import cci.dataStructures.SingleLinkedList;
 

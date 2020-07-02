@@ -1,4 +1,4 @@
-package cci.chapters.linked_list;
+package cci.chapters.linkedList;
 
 import java.util.HashMap;
 import java.util.Map;
